@@ -1,0 +1,280 @@
+You are an expert full-stack engineer. Build a portfolio-quality project called:
+
+    NeonAlgo Lab – Interactive Algorithm Visualization Playground
+
+This must highlight:
+- Frontend skills with React + TypeScript and colorful visualizations
+- Backend skills with Python + Django (REST API)
+- Clean architecture, tests, and clear documentation
+- Deployability on Ubuntu 24 VPS with Nginx (Docker optional but supported)
+
+==================================================
+HIGH-LEVEL FEATURE SPEC
+==================================================
+
+NeonAlgo Lab is a web app where users can:
+
+- Choose an algorithm from a categorized list
+- Adjust parameters (input size, speed, distribution, etc.)
+- Start, pause, reset, and step through the algorithm
+- Watch a smooth, colorful visualization on a dark background
+- See metrics: steps, elapsed time, and theoretical complexity
+- Optionally call the backend to benchmark “real” runs in Python
+
+Focus on a **small, polished set** of algorithms in v1:
+
+1) SORTING VISUALIZERS
+   - Merge Sort
+   - Quick Sort
+   - Heap Sort
+
+   Visualization:
+   - Bars across the screen representing array values
+   - Dark background, rainbow-colored bars
+   - Swaps and comparisons are animated (e.g., bars briefly change color)
+   - Smooth animations using requestAnimationFrame or similar
+   - Controls: generate array (size, distribution), run, pause, step, reset, speed slider
+
+2) PATHFINDING VISUALIZERS
+   - Dijkstra
+   - A* on a grid
+
+   Visualization:
+   - 2D grid (rows x cols) on a dark background
+   - Different colors for:
+     - Start node
+     - End node
+     - Walls/obstacles
+     - Open set / frontier
+     - Visited/closed set
+     - Final shortest path
+   - Users can:
+     - Click to toggle walls
+     - Drag or click to move start/end points
+   - Controls: algorithm choice (Dijkstra vs A*), grid size, obstacle density, run, pause, reset, speed slider
+
+3) K-MEANS CLUSTERING DEMO
+   - k-means in 2D
+   - Generate random points in 2D and k cluster centers
+   - Animation:
+     - Assign step: each point adopts the color of its nearest centroid
+     - Update step: centroids move (animated) to the mean of assigned points
+   - Visual:
+     - Dark background with bright, colorful cluster colors
+     - Smooth transitions of centroid movement
+   - Controls: number of points, number of clusters k, run/step/reset
+
+==================================================
+TECH STACK & ARCHITECTURE
+==================================================
+
+FRONTEND
+- React + TypeScript
+- Vite for bundling
+- Tailwind CSS for styling
+- Dark-mode default UI with a subtle neon/cyberpunk vibe:
+  - Dark gray / near-black background
+  - Accent colors: rainbow-like gradient for bars, nodes, points
+- HTML5 Canvas or SVG for visualizations
+  - Prefer Canvas for smooth animations and performance
+
+BACKEND
+- Python 3 + Django + Django REST Framework
+- Provide a simple REST API with endpoints like:
+  - GET /api/algorithms/              → list available algorithms + categories
+  - POST /api/benchmark/sorting/      → run a large sorting benchmark server-side and return metrics
+  - POST /api/benchmark/pathfinding/  → run pathfinding benchmark on a generated graph/grid
+  - POST /api/benchmark/kmeans/       → run k-means on a larger dataset
+
+- The backend should:
+  - Implement the same algorithms in Python (readable, well-documented code)
+  - Provide unit tests for these algorithms (Django tests or pytest)
+  - Return metrics such as:
+    - Input size
+    - Execution time
+    - Number of iterations / steps (if relevant)
+  - Not handle visualization; only logic + metrics
+
+==================================================
+FRONTEND DETAILS
+==================================================
+
+Project structure example:
+
+- frontend/
+  - index.html
+  - vite.config.ts
+  - package.json
+  - src/
+    - main.tsx
+    - App.tsx
+    - components/
+      - Layout/
+        - Sidebar.tsx
+        - TopBar.tsx
+      - controls/
+        - AlgorithmSelector.tsx
+        - SortingControls.tsx
+        - PathfindingControls.tsx
+        - KMeansControls.tsx
+      - visualizers/
+        - SortingVisualizer.tsx
+        - PathfindingVisualizer.tsx
+        - KMeansVisualizer.tsx
+      - metrics/
+        - MetricsPanel.tsx
+        - ComplexityInfo.tsx
+    - algorithms/
+      - sorting/
+        - mergeSort.ts
+        - quickSort.ts
+        - heapSort.ts
+      - pathfinding/
+        - dijkstra.ts
+        - aStar.ts
+      - kmeans/
+        - kmeans.ts
+    - types/
+      - algorithms.ts
+      - visualization.ts
+    - hooks/
+      - useSortingVisualizer.ts
+      - usePathfindingVisualizer.ts
+      - useKMeansVisualizer.ts
+    - services/
+      - apiClient.ts   (for calling Django API)
+    - styles/
+      - globals.css (hooked into Tailwind)
+
+Key frontend requirements:
+
+- Use TypeScript with proper types for algorithm steps:
+  - e.g., a `SortingStep` type describing comparisons and swaps
+  - a `PathfindingStep` type describing visited nodes, frontier, etc.
+  - a `KMeansStep` type describing centroid positions and point assignments
+- Algorithm modules should not depend on React directly:
+  - They should expose a generator or function that yields step-by-step states
+  - The React components consume these steps and animate them
+- Provide a global layout:
+  - Left sidebar: algorithm selection + parameter controls
+  - Center/main area: visualization canvas
+  - Bottom (or right) panel: metrics, complexity, description
+
+UI behavior:
+
+- Each visualizer page has:
+  - “Generate” / “Randomize” button
+  - “Run”, “Pause/Resume”, “Step”, “Reset” controls
+  - “Speed” slider that adjusts the delay between steps
+- For each algorithm, show:
+  - Static theoretical complexity (O notation) in a friendly way
+  - Simple description ("Merge Sort recursively splits the array…")
+- Use smooth transitions and avoid janky frame updates.
+- All visuals are on a dark background with bright, contrasting colors (rainbow-like where appropriate).
+
+==================================================
+BACKEND DETAILS
+==================================================
+
+Project structure example:
+
+- backend/
+  - manage.py
+  - neonalgo/
+    - __init__.py
+    - settings.py
+    - urls.py
+    - wsgi.py
+  - api/
+    - __init__.py
+    - models.py (if needed)
+    - urls.py
+    - views.py
+    - serializers.py
+    - algorithms/
+      - __init__.py
+      - sorting.py     (merge, quick, heap)
+      - pathfinding.py (dijkstra, a_star)
+      - kmeans.py
+    - tests/
+      - test_sorting.py
+      - test_pathfinding.py
+      - test_kmeans.py
+  - requirements.txt
+
+Backend requirements:
+
+- Use Django REST Framework to define API views/serializers.
+- Implement Python versions of:
+  - Merge Sort, Quick Sort, Heap Sort
+  - Dijkstra and A* pathfinding
+  - k-means clustering
+- Provide unit tests to verify correctness of these implementations.
+- Ensure API endpoints are documented in the README (URLs, request body, response shape).
+
+==================================================
+DEPLOYMENT & TOOLING
+==================================================
+
+- Provide a top-level structure:
+
+  - /frontend
+  - /backend
+  - /README.md
+  - /docker/
+    - frontend.Dockerfile
+    - backend.Dockerfile
+    - docker-compose.yml (optional but preferred)
+
+- README must include:
+  - Project description and features
+  - Tech stack (React + TS + Vite + Tailwind, Django REST)
+  - How to run locally:
+    - frontend: `npm install`, `npm run dev`, `npm run build`
+    - backend: `pip install -r requirements.txt`, `python manage.py migrate`, `python manage.py runserver`
+  - How to run with Docker (if docker-compose is present)
+  - Example Nginx reverse proxy configuration for Ubuntu 24:
+    - One server block serving the built frontend as static files
+    - Proxying `/api/` to the Django backend
+- Include basic scripts:
+  - For frontend: `npm run lint`, `npm run test` (at least a couple of tests)
+  - For backend: `python manage.py test`
+
+==================================================
+CODE QUALITY EXPECTATIONS
+==================================================
+
+- Use consistent, modern coding style.
+- Include inline comments for key algorithmic parts explaining:
+  - What each step is doing
+  - Why certain data structures are used
+- Use descriptive variable and function names.
+- Split logic into small, understandable modules.
+- Avoid premature optimization; prioritize clarity and readability.
+
+==================================================
+DELIVERABLES
+==================================================
+
+1. Complete `/frontend` React + TypeScript project (Vite + Tailwind) ready to build.
+2. Complete `/backend` Django REST project with Python algorithm implementations and tests.
+3. Basic tests for:
+   - At least one sorting algorithm
+   - One pathfinding algorithm
+   - k-means clustering
+4. A clear README explaining:
+   - Features and algorithms included
+   - How to run locally
+   - How to build and deploy on Ubuntu 24 with Nginx (and optionally Docker)
+5. Example code for:
+   - One sorting algorithm end-to-end (TS generator → visualizer component)
+   - One pathfinding algorithm end-to-end
+   - k-means clustering end-to-end
+
+Start by outlining the full folder structure, then populate the key files: 
+- package.json and Vite config for frontend
+- Django project and app scaffolding
+- TypeScript algorithm types and one full visualizer (e.g., Merge Sort)
+- Python algorithm implementations with at least one unit test example
+
+Then continue filling in the remaining algorithms and visualizers.
