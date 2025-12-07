@@ -3,13 +3,38 @@ import { heapSortSteps } from "../../algorithms/sorting/heapSort";
 import { mergeSortSteps } from "../../algorithms/sorting/mergeSort";
 import { quickSortSteps } from "../../algorithms/sorting/quickSort";
 import { SortingStep } from "../../types/algorithms";
+import { ComplexityMeta } from "../../types/complexity";
 
 type AlgorithmKey = "merge" | "quick" | "heap";
 
-const algorithmLabels: Record<AlgorithmKey, string> = {
-  merge: "Merge Sort",
-  quick: "Quick Sort",
-  heap: "Heap Sort"
+const algorithms: { key: AlgorithmKey; label: string }[] = [
+  { key: "merge", label: "Merge Sort" },
+  { key: "quick", label: "Quick Sort" },
+  { key: "heap", label: "Heap Sort" }
+];
+
+const complexityByAlgo: Record<AlgorithmKey, ComplexityMeta> = {
+  merge: {
+    name: "Merge Sort",
+    best: "O(n log n)",
+    average: "O(n log n)",
+    worst: "O(n log n)",
+    description: "Stable divide-and-conquer sort that splits, sorts recursively, then merges sorted halves."
+  },
+  quick: {
+    name: "Quick Sort",
+    best: "O(n log n)",
+    average: "O(n log n)",
+    worst: "O(n^2)",
+    description: "Partition-based sort that recursively orders elements around pivots; fast in practice but quadratic on bad pivots."
+  },
+  heap: {
+    name: "Heap Sort",
+    best: "O(n log n)",
+    average: "O(n log n)",
+    worst: "O(n log n)",
+    description: "Builds a heap then repeatedly extracts max/min to produce a sorted array in-place."
+  }
 };
 
 const colors = ["#ff2d95", "#2de2e6", "#f8d210", "#3df29b", "#7c3aed", "#f97316"];
@@ -32,7 +57,11 @@ function applyStep(array: number[], step: SortingStep): number[] {
   return next;
 }
 
-function SortingVisualizer() {
+type SortingVisualizerProps = {
+  onComplexityChange?: (meta: ComplexityMeta) => void;
+};
+
+function SortingVisualizer({ onComplexityChange }: SortingVisualizerProps) {
   const [algorithm, setAlgorithm] = useState<AlgorithmKey>("merge");
   const [size, setSize] = useState(42);
   const [baseArray, setBaseArray] = useState<number[]>(() => generateArray(42));
@@ -57,6 +86,7 @@ function SortingVisualizer() {
     setStepIndex(0);
     setIsPlaying(false);
     setActiveIndices([]);
+    onComplexityChange?.(complexityByAlgo[algorithm]);
   }, [algorithm, baseArray]);
 
   useEffect(() => {
@@ -112,16 +142,18 @@ function SortingVisualizer() {
       <div className="flex flex-wrap items-center gap-3 text-sm text-slate-300">
         <span className="rounded-full bg-fuchsia-500/30 px-3 py-1 text-fuchsia-100">Sorting</span>
         <div className="flex flex-wrap gap-2">
-          {(["merge", "quick", "heap"] as AlgorithmKey[]).map((key) => (
+          {algorithms.map(({ key, label }) => (
             <button
               key={key}
               type="button"
               onClick={() => setAlgorithm(key)}
-              className={`rounded-lg border px-3 py-1 text-xs transition ${
-                algorithm === key ? "border-cyan-400 text-cyan-100" : "border-slate-800 text-slate-400 hover:border-slate-600"
+              className={`rounded-full border px-3 py-1 text-xs font-semibold transition ${
+                algorithm === key
+                  ? "border-cyan-400 bg-cyan-500/15 text-cyan-50"
+                  : "border-slate-800 bg-slate-900/50 text-slate-300 hover:border-slate-600"
               }`}
             >
-              {algorithmLabels[key]}
+              {label}
             </button>
           ))}
         </div>
@@ -135,14 +167,15 @@ function SortingVisualizer() {
               <span>Array size: {displayArray.length}</span>
               <span>Speed: {speed}ms</span>
             </div>
-            <span className="text-cyan-300">{algorithmLabels[algorithm]}</span>
+            <span className="text-cyan-300">{algorithms.find((a) => a.key === algorithm)?.label}</span>
           </div>
-          <div className="flex h-[27rem] items-end gap-[2px] overflow-hidden rounded-lg border border-slate-800 bg-[#0b1020] px-1 py-3">
-            {displayArray.map((value, idx) => {
-              const height = `${(value / maxValue) * 100}%`;
-              const isActive = activeIndices.includes(idx);
-              const color = colors[idx % colors.length];
-              return (
+          <div className="relative w-full aspect-[4/3] max-h-[28rem] overflow-hidden rounded-lg border border-slate-800 bg-[#0b1020] p-3">
+            <div className="flex h-full items-end gap-[2px]">
+              {displayArray.map((value, idx) => {
+                const height = `${(value / maxValue) * 100}%`;
+                const isActive = activeIndices.includes(idx);
+                const color = colors[idx % colors.length];
+                return (
                 <div
                   key={idx}
                   className="flex-1 rounded-t"
@@ -152,8 +185,9 @@ function SortingVisualizer() {
                   }}
                   title={`${value}`}
                 />
-              );
-            })}
+                  );
+                })}
+            </div>
           </div>
         </div>
 

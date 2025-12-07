@@ -1,8 +1,12 @@
+import logo from "../../assets/logo.png";
+
 function TopBar() {
   return (
     <header className="sticky top-0 z-10 mb-4 flex items-center justify-between border-b border-slate-800 bg-[#0b1020]/80 px-2 py-4 backdrop-blur">
       <div className="flex items-center gap-3">
-        <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-fuchsia-500 via-cyan-400 to-amber-300 shadow-lg shadow-cyan-500/30" />
+        <div className="relative h-10 w-10 rounded-xl bg-gradient-to-br from-fuchsia-500 via-cyan-400 to-amber-300 shadow-lg shadow-cyan-500/30 overflow-hidden border border-slate-900/60">
+          <img src={logo} alt="NeonAlgo logo" className="h-full w-full object-cover mix-blend-screen" />
+        </div>
         <div>
           <p className="text-sm uppercase tracking-[0.2em] text-cyan-300">NeonAlgo Lab</p>
           <p className="text-lg font-semibold text-slate-100">Interactive Algorithm Playground</p>

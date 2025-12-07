@@ -16,9 +16,13 @@ const neighbors = (rows: number, cols: number, [r, c]: Point): Point[] => {
     .filter(([nr, nc]) => nr >= 0 && nr < rows && nc >= 0 && nc < cols);
 };
 
-export function* dijkstraSteps(rows = 12, cols = 18): Generator<PathfindingStep, void, unknown> {
-  const start: Point = [0, 0];
-  const goal: Point = [rows - 1, cols - 1];
+export function* dijkstraSteps(
+  rows = 12,
+  cols = 18,
+  start: Point = [0, 0],
+  goal: Point = [rows - 1, cols - 1],
+  walls: Set<string> = new Set()
+): Generator<PathfindingStep, void, unknown> {
 
   const visited = new Set<string>();
   const parent = new Map<string, string | null>();
@@ -58,6 +62,7 @@ export function* dijkstraSteps(rows = 12, cols = 18): Generator<PathfindingStep,
     }
 
     for (const n of neighbors(rows, cols, point)) {
+      if (walls.has(key(...n))) continue;
       const nid = key(...n);
       if (visited.has(nid)) continue;
       if (!frontier.find((f) => key(...f.point) === nid)) {

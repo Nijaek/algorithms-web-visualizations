@@ -3,15 +3,19 @@ type SidebarProps = {
   onChange: (category: "sorting" | "pathfinding" | "kmeans") => void;
 };
 
-const categories: { key: SidebarProps["activeCategory"]; label: string; hint: string }[] = [
-  { key: "sorting", label: "Sorting", hint: "Merge / Quick / Heap" },
-  { key: "pathfinding", label: "Pathfinding", hint: "Dijkstra / A*" },
-  { key: "kmeans", label: "K-Means", hint: "2D clustering" }
+const categories: {
+  key: SidebarProps["activeCategory"];
+  label: string;
+  tags: string[];
+}[] = [
+  { key: "sorting", label: "Sorting", tags: ["Merge Sort", "Quick Sort", "Heap Sort"] },
+  { key: "pathfinding", label: "Pathfinding", tags: ["Dijkstra", "A* Search"] },
+  { key: "kmeans", label: "K-Means", tags: ["Lloyd's k-means"] }
 ];
 
 function Sidebar({ activeCategory, onChange }: SidebarProps) {
   return (
-    <aside className="flex h-[calc(100vh-96px)] flex-col gap-3 rounded-2xl border border-slate-800 bg-[#0c1224]/80 p-4 shadow-lg shadow-fuchsia-500/10">
+    <aside className="flex h-[calc(100vh-120px)] flex-col gap-3 rounded-2xl border border-slate-800 bg-[#0c1224]/80 p-4 shadow-lg shadow-fuchsia-500/10">
       <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Algorithms</p>
       <div className="space-y-2">
         {categories.map((cat) => {
@@ -31,7 +35,13 @@ function Sidebar({ activeCategory, onChange }: SidebarProps) {
                 <span className="font-semibold">{cat.label}</span>
                 <span className="h-2 w-2 rounded-full bg-gradient-to-br from-cyan-400 to-fuchsia-500" />
               </div>
-              <p className="text-xs text-slate-400">{cat.hint}</p>
+              <div className="mt-1 flex flex-wrap gap-1">
+                {cat.tags.map((tag) => (
+                  <span key={tag} className="rounded-full border border-slate-700/80 bg-slate-900/60 px-2 py-[2px] text-[11px] text-slate-300">
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </button>
           );
         })}

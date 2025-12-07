@@ -1,10 +1,23 @@
 import { useEffect, useMemo, useState } from "react";
 import { KMeansStep } from "../../types/algorithms";
 import { KMeansPoint, generatePoints, kmeansSteps } from "../../algorithms/kmeans/kmeans";
+import { ComplexityMeta } from "../../types/complexity";
 
 const palette = ["#ff2d95", "#2de2e6", "#f8d210", "#3df29b", "#a855f7", "#fb7185"];
 
-function KMeansVisualizer() {
+type KMeansVisualizerProps = {
+  onComplexityChange?: (meta: ComplexityMeta) => void;
+};
+
+const kmeansComplexity: ComplexityMeta = {
+  name: "Lloyd's k-means",
+  best: "O(n k t)",
+  average: "O(n k t)",
+  worst: "O(n k t)",
+  description: "Iteratively assigns points to nearest centroids and recenters them until assignments stabilize."
+};
+
+function KMeansVisualizer({ onComplexityChange }: KMeansVisualizerProps) {
   const [points, setPoints] = useState<KMeansPoint[]>(() => generatePoints(60));
   const [clusters, setClusters] = useState(3);
   const [steps, setSteps] = useState<KMeansStep[]>([]);
@@ -22,6 +35,7 @@ function KMeansVisualizer() {
     setAssignments(new Array(points.length).fill(-1));
     setStepIndex(0);
     setIsPlaying(false);
+    onComplexityChange?.(kmeansComplexity);
   }, [points, clusters]);
 
   useEffect(() => {
@@ -77,7 +91,7 @@ function KMeansVisualizer() {
             </span>
             <span>Speed: {speed}ms</span>
           </div>
-          <div className="relative h-[27rem] overflow-hidden rounded-lg border border-slate-800 bg-[#0b1020]">
+          <div className="relative w-full aspect-[4/3] max-h-[28rem] overflow-hidden rounded-lg border border-slate-800 bg-[#0b1020]">
             {canvasPoints.map((p, idx) => (
               <div
                 key={idx}
