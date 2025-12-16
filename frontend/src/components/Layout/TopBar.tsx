@@ -13,7 +13,7 @@ function TopBar() {
         </div>
       </div>
       <div className="rounded-full border border-slate-800 bg-slate-900/60 px-4 py-2 text-xs text-slate-300 shadow-lg shadow-fuchsia-500/10">
-        v0.1 scaffold
+        v1.00.00
       </div>
     </header>
   );

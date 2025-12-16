@@ -71,6 +71,7 @@ function SortingVisualizer({ onComplexityChange }: SortingVisualizerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(40); // ms per step
   const [activeIndices, setActiveIndices] = useState<number[]>([]);
+  const [isComplete, setIsComplete] = useState(false);
 
   const maxValue = useMemo(() => Math.max(...displayArray, 100), [displayArray]);
 
@@ -86,6 +87,7 @@ function SortingVisualizer({ onComplexityChange }: SortingVisualizerProps) {
     setStepIndex(0);
     setIsPlaying(false);
     setActiveIndices([]);
+    setIsComplete(false);
     onComplexityChange?.(complexityByAlgo[algorithm]);
   }, [algorithm, baseArray]);
 
@@ -112,6 +114,9 @@ function SortingVisualizer({ onComplexityChange }: SortingVisualizerProps) {
       setActiveIndices(step.indices);
     } else if (step.type === "overwrite") {
       setActiveIndices([step.index]);
+    } else if (step.type === "done") {
+      setActiveIndices([]);
+      setIsComplete(true);
     } else {
       setActiveIndices([]);
     }
@@ -134,6 +139,7 @@ function SortingVisualizer({ onComplexityChange }: SortingVisualizerProps) {
     setDisplayArray([...baseArray]);
     setStepIndex(0);
     setActiveIndices([]);
+    setIsComplete(false);
     setIsPlaying(true);
   };
 
@@ -178,10 +184,14 @@ function SortingVisualizer({ onComplexityChange }: SortingVisualizerProps) {
                 return (
                 <div
                   key={idx}
-                  className="flex-1 rounded-t"
+                  className="flex-1 rounded-t transition-all duration-300"
                   style={{
                     height,
-                    background: isActive ? "linear-gradient(180deg, #2de2e6, #ff2d95)" : `linear-gradient(180deg, ${color}, #111827)`
+                    background: isComplete
+                      ? "linear-gradient(180deg, #10b981, #059669)"
+                      : isActive
+                        ? "linear-gradient(180deg, #2de2e6, #ff2d95)"
+                        : `linear-gradient(180deg, ${color}, #111827)`
                   }}
                   title={`${value}`}
                 />
