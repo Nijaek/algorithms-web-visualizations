@@ -5,7 +5,7 @@ import { PathfindingStep } from "../../types/algorithms";
 import { ComplexityMeta } from "../../types/complexity";
 
 type AlgorithmKey = "dijkstra" | "astar";
-type GridType = "empty" | "random" | "maze";
+type GridType = "empty" | "random" | "maze" | "none";
 type CellStatus = "empty" | "visited" | "frontier" | "path" | "start" | "goal" | "wall";
 type DragMode = "none" | "start" | "goal" | "wallOn" | "wallOff";
 
@@ -72,8 +72,12 @@ function PathfindingVisualizer({ onComplexityChange }: PathfindingVisualizerProp
   }, [rows, cols]);
 
   useEffect(() => {
-    const generator =
-      algorithm === "astar" ? aStarSteps(rows, cols, start, goal, walls) : dijkstraSteps(rows, cols, start, goal, walls);
+    const generator = (() => {
+      switch (algorithm) {
+        case "astar": return aStarSteps(rows, cols, start, goal, walls);
+        default: return dijkstraSteps(rows, cols, start, goal, walls);
+      }
+    })();
     setSteps(Array.from(generator));
     setStepIndex(0);
     setIsPlaying(false);
@@ -150,7 +154,7 @@ function PathfindingVisualizer({ onComplexityChange }: PathfindingVisualizerProp
     const makeWall = !walls.has(key(r, c));
     setWallAt(r, c, makeWall);
     setDragMode(makeWall ? "wallOn" : "wallOff");
-    setGridType("empty");
+    setGridType("none");
   };
 
   const handlePointerEnter = (r: number, c: number) => {
@@ -252,8 +256,13 @@ function PathfindingVisualizer({ onComplexityChange }: PathfindingVisualizerProp
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-3 text-sm text-slate-300">
         <span className="rounded-full bg-cyan-500/30 px-3 py-1 text-cyan-100">Pathfinding</span>
-        <div className="flex gap-2">
-          {(["dijkstra", "astar"] as AlgorithmKey[]).map((key) => (
+        <div className="flex flex-wrap gap-2">
+          {(
+            [
+              { key: "dijkstra" as AlgorithmKey, label: "Dijkstra" },
+              { key: "astar" as AlgorithmKey, label: "A*" }
+            ]
+          ).map(({ key, label }) => (
             <button
               key={key}
               type="button"
@@ -264,7 +273,7 @@ function PathfindingVisualizer({ onComplexityChange }: PathfindingVisualizerProp
                   : "border-slate-800 bg-slate-900/50 text-slate-300 hover:border-slate-600"
               }`}
             >
-              {key === "dijkstra" ? "Dijkstra" : "A* Search"}
+              {label}
             </button>
           ))}
         </div>
@@ -384,7 +393,9 @@ function PathfindingVisualizer({ onComplexityChange }: PathfindingVisualizerProp
                 Maze
               </button>
             </div>
-            <p className="text-[11px] text-slate-500">Selected: {gridType}</p>
+            <p className="text-[11px] text-slate-500">
+              Selected: {gridType === "none" ? "None (manual)" : gridType.charAt(0).toUpperCase() + gridType.slice(1)}
+            </p>
           </div>
           <div className="space-y-1">
             <label className="flex items-center justify-between text-xs text-slate-400">

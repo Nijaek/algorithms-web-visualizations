@@ -2,15 +2,21 @@ import { useEffect, useMemo, useState } from "react";
 import { heapSortSteps } from "../../algorithms/sorting/heapSort";
 import { mergeSortSteps } from "../../algorithms/sorting/mergeSort";
 import { quickSortSteps } from "../../algorithms/sorting/quickSort";
+import { bubbleSortSteps } from "../../algorithms/sorting/bubbleSort";
+import { insertionSortSteps } from "../../algorithms/sorting/insertionSort";
+import { selectionSortSteps } from "../../algorithms/sorting/selectionSort";
 import { SortingStep } from "../../types/algorithms";
 import { ComplexityMeta } from "../../types/complexity";
 
-type AlgorithmKey = "merge" | "quick" | "heap";
+type AlgorithmKey = "merge" | "quick" | "heap" | "bubble" | "insertion" | "selection";
 
 const algorithms: { key: AlgorithmKey; label: string }[] = [
   { key: "merge", label: "Merge Sort" },
   { key: "quick", label: "Quick Sort" },
-  { key: "heap", label: "Heap Sort" }
+  { key: "heap", label: "Heap Sort" },
+  { key: "bubble", label: "Bubble Sort" },
+  { key: "insertion", label: "Insertion Sort" },
+  { key: "selection", label: "Selection Sort" }
 ];
 
 const complexityByAlgo: Record<AlgorithmKey, ComplexityMeta> = {
@@ -34,6 +40,27 @@ const complexityByAlgo: Record<AlgorithmKey, ComplexityMeta> = {
     average: "O(n log n)",
     worst: "O(n log n)",
     description: "Builds a heap then repeatedly extracts max/min to produce a sorted array in-place."
+  },
+  bubble: {
+    name: "Bubble Sort",
+    best: "O(n)",
+    average: "O(n^2)",
+    worst: "O(n^2)",
+    description: "Repeatedly steps through the list, compares adjacent elements and swaps them if they're in the wrong order."
+  },
+  insertion: {
+    name: "Insertion Sort",
+    best: "O(n)",
+    average: "O(n^2)",
+    worst: "O(n^2)",
+    description: "Builds the final sorted array one item at a time by inserting each element into its proper position."
+  },
+  selection: {
+    name: "Selection Sort",
+    best: "O(n^2)",
+    average: "O(n^2)",
+    worst: "O(n^2)",
+    description: "Repeatedly finds the minimum element and places it at the beginning of the unsorted portion."
   }
 };
 
@@ -79,6 +106,9 @@ function SortingVisualizer({ onComplexityChange }: SortingVisualizerProps) {
     const generator = (() => {
       if (algorithm === "quick") return quickSortSteps(baseArray);
       if (algorithm === "heap") return heapSortSteps(baseArray);
+      if (algorithm === "bubble") return bubbleSortSteps(baseArray);
+      if (algorithm === "insertion") return insertionSortSteps(baseArray);
+      if (algorithm === "selection") return selectionSortSteps(baseArray);
       return mergeSortSteps(baseArray);
     })();
     const allSteps = Array.from(generator);
