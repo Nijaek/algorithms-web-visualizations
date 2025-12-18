@@ -107,7 +107,18 @@ export default function GraphControlsV2({
       {/* Target-based search options for traversal algorithms */}
       {isTraversalAlgorithm && (
         <div className="space-y-2">
-          <p className="text-xs text-slate-400">Target Search</p>
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="target-search"
+              checked={useTargetSearch}
+              onChange={(e) => setUseTargetSearch?.(e.target.checked)}
+              className="rounded border-slate-700 bg-slate-800/50 text-cyan-400 focus:ring-cyan-400 focus:ring-offset-slate-900"
+            />
+            <label htmlFor="target-search" className="text-xs text-slate-400">
+              Enable Target Search
+            </label>
+          </div>
 
           {useTargetSearch && (
             <div className="space-y-2 pl-4">
@@ -115,7 +126,7 @@ export default function GraphControlsV2({
                 <label className="text-xs text-slate-400">Start Node</label>
                 <select
                   value={startNode}
-                  onChange={(e) => setStartNode(Number(e.target.value))}
+                  onChange={(e) => setStartNode?.(Number(e.target.value))}
                   className="w-full rounded-lg border border-slate-700 bg-slate-800/50 px-2 py-1 text-sm"
                 >
                   {Array.from({ length: numAvailableNodes }, (_, i) => (
@@ -130,7 +141,7 @@ export default function GraphControlsV2({
                 <label className="text-xs text-slate-400">Target Node</label>
                 <select
                   value={targetNode ?? ''}
-                  onChange={(e) => setTargetNode(e.target.value ? Number(e.target.value) : null)}
+                  onChange={(e) => setTargetNode?.(e.target.value ? Number(e.target.value) : null)}
                   className="w-full rounded-lg border border-slate-700 bg-slate-800/50 px-2 py-1 text-sm"
                 >
                   <option value="">Select target</option>
