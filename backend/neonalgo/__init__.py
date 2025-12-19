@@ -1,1 +1,0 @@
-# NeonAlgo Lab backend package

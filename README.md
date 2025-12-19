@@ -1,10 +1,32 @@
-# NeonAlgo Lab (scaffold)
+# nijae.dev | Interactive Algorithm Playground
 
-Initial folder/layout scaffold for NeonAlgo Lab.
+Interactive algorithm visualization platform for educational purposes.
 
-## Structure
-- `frontend/` – Vite + React + TypeScript + Tailwind scaffold with placeholder visualizer components.
-- `backend/` – Django + DRF scaffold with placeholder algorithms/tests and API routes.
-- `docker/` – Dockerfiles for frontend/backend plus sample Nginx config and compose file.
+## Features
 
-Next steps: flesh out algorithm generators (TS + Python), wire controls/metrics to hooks, expand API benchmarking, and document build/run instructions.
+| Category | Algorithms |
+|----------|-----------|
+| **Sorting** | Merge Sort, Quick Sort, Heap Sort, Bubble Sort, Insertion Sort, Selection Sort |
+| **Pathfinding** | Dijkstra, A*, BFS, DFS |
+| **Graph** | Prim's MST, Topological Sort, Bellman-Ford, BFS, DFS |
+| **Data Structures** | BST, AVL Tree, Red-Black Tree, Heap, Hash Table, Linked List |
+| **Machine Learning** | K-Means, Linear Regression, KNN, Decision Tree, Logistic Regression |
+
+All algorithms run entirely client-side with step-by-step visualization.
+
+## Development
+
+```bash
+npm install
+npm run dev
+```
+
+## Build
+
+```bash
+npm run build
+```
+
+## Documentation
+
+- [UI Style Guide](docs/UI-STYLE-GUIDE.md) – Styling conventions for visualizers
