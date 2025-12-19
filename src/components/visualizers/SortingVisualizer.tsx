@@ -174,7 +174,7 @@ function SortingVisualizer({ onComplexityChange }: SortingVisualizerProps) {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 h-full">
       <div className="flex flex-wrap items-center gap-3 text-sm text-slate-300">
         <span className="rounded-full bg-fuchsia-500/30 px-3 py-1 text-fuchsia-100">Sorting</span>
         <div className="flex flex-wrap gap-2">
@@ -195,9 +195,9 @@ function SortingVisualizer({ onComplexityChange }: SortingVisualizerProps) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 md:flex-row">
-        <div className="flex-1 rounded-xl border border-slate-800 bg-slate-900/40 p-4">
-          <div className="mb-2 flex items-center justify-between text-xs text-slate-400">
+      <div className="flex flex-col gap-3 md:flex-row flex-1 min-h-0">
+        <div className="flex-1 flex flex-col gap-2 rounded-xl border border-slate-800 bg-slate-900/40 p-4 min-h-0">
+          <div className="flex items-center justify-between text-xs text-slate-400">
             <div className="flex items-center gap-3">
               <span>Steps: {stepIndex}</span>
               <span>Array size: {displayArray.length}</span>
@@ -205,7 +205,7 @@ function SortingVisualizer({ onComplexityChange }: SortingVisualizerProps) {
             </div>
             <span className="text-cyan-300">{algorithms.find((a) => a.key === algorithm)?.label}</span>
           </div>
-          <div className="relative w-full aspect-[4/3] max-h-[28rem] overflow-hidden rounded-lg border border-slate-800 bg-[#0b1020] p-3">
+          <div className="relative w-full flex-1 min-h-0 overflow-hidden rounded-lg border border-slate-800 bg-[#0b1020] p-3">
             <div className="flex h-full items-end gap-[2px]">
               {displayArray.map((value, idx) => {
                 const height = `${(value / maxValue) * 100}%`;
@@ -231,7 +231,7 @@ function SortingVisualizer({ onComplexityChange }: SortingVisualizerProps) {
           </div>
         </div>
 
-        <div className="w-full max-w-xs space-y-3 rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-200">
+        <div className="w-full max-w-xs space-y-3 rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-200 max-h-full overflow-y-auto">
           <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Controls</p>
           <div className="flex gap-2">
             <button

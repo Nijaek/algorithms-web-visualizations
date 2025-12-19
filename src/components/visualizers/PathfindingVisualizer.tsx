@@ -253,7 +253,7 @@ function PathfindingVisualizer({ onComplexityChange }: PathfindingVisualizerProp
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 h-full">
       <div className="flex flex-wrap items-center gap-3 text-sm text-slate-300">
         <span className="rounded-full bg-cyan-500/30 px-3 py-1 text-cyan-100">Pathfinding</span>
         <div className="flex flex-wrap gap-2">
@@ -279,8 +279,8 @@ function PathfindingVisualizer({ onComplexityChange }: PathfindingVisualizerProp
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 md:flex-row">
-        <div className="flex-1 space-y-2 rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+      <div className="flex flex-col gap-3 md:flex-row flex-1 min-h-0">
+        <div className="flex-1 flex flex-col gap-2 rounded-xl border border-slate-800 bg-slate-900/40 p-4 min-h-0">
           <div className="flex items-center justify-between text-xs text-slate-400">
             <span>Steps: {stepIndex}</span>
             <span>
@@ -289,7 +289,7 @@ function PathfindingVisualizer({ onComplexityChange }: PathfindingVisualizerProp
             <span>Speed: {speed}ms</span>
           </div>
           <div
-            className="relative w-full aspect-[4/3] max-h-[28rem] rounded-lg border border-slate-800 bg-[#0b1020] p-3"
+            className="relative w-full flex-1 min-h-0 rounded-lg border border-slate-800 bg-[#0b1020] p-3"
             onPointerUp={handlePointerUp}
             onPointerLeave={handlePointerUp}
           >
@@ -322,7 +322,7 @@ function PathfindingVisualizer({ onComplexityChange }: PathfindingVisualizerProp
           </div>
         </div>
 
-        <div className="w-full max-w-xs space-y-3 rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-200">
+        <div className="w-full max-w-xs space-y-3 rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-200 max-h-full overflow-y-auto">
           <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Controls</p>
           <div className="flex gap-2">
             <button

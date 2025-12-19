@@ -63,7 +63,7 @@ export default function GraphControlsV2({
   const isTraversalAlgorithm = algorithm === 'bfs' || algorithm === 'dfs';
 
   return (
-    <div className="w-full max-w-xs space-y-3 rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-200">
+    <div className="w-full max-w-xs space-y-3 rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-200 max-h-full overflow-y-auto">
       <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Controls</p>
 
       <div className="space-y-1">
@@ -104,56 +104,41 @@ export default function GraphControlsV2({
         />
       </div>
 
-      {/* Target-based search options for traversal algorithms */}
+      {/* Target search options for traversal algorithms */}
       {isTraversalAlgorithm && (
         <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="target-search"
-              checked={useTargetSearch}
-              onChange={(e) => setUseTargetSearch?.(e.target.checked)}
-              className="rounded border-slate-700 bg-slate-800/50 text-cyan-400 focus:ring-cyan-400 focus:ring-offset-slate-900"
-            />
-            <label htmlFor="target-search" className="text-xs text-slate-400">
-              Enable Target Search
-            </label>
-          </div>
-
-          {useTargetSearch && (
-            <div className="space-y-2 pl-4">
-              <div className="space-y-1">
-                <label className="text-xs text-slate-400">Start Node</label>
-                <select
-                  value={startNode}
-                  onChange={(e) => setStartNode?.(Number(e.target.value))}
-                  className="w-full rounded-lg border border-slate-700 bg-slate-800/50 px-2 py-1 text-sm"
-                >
-                  {Array.from({ length: numAvailableNodes }, (_, i) => (
-                    <option key={i} value={i}>
-                      Node {i}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-xs text-slate-400">Target Node</label>
-                <select
-                  value={targetNode ?? ''}
-                  onChange={(e) => setTargetNode?.(e.target.value ? Number(e.target.value) : null)}
-                  className="w-full rounded-lg border border-slate-700 bg-slate-800/50 px-2 py-1 text-sm"
-                >
-                  <option value="">Select target</option>
-                  {Array.from({ length: numAvailableNodes }, (_, i) => (
-                    <option key={i} value={i} disabled={i === startNode}>
-                      Node {i} {i === startNode && '(start)'}
-                    </option>
-                  ))}
-                </select>
-              </div>
+          <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Target Search</p>
+          <div className="space-y-2">
+            <div className="space-y-1">
+              <label className="text-xs text-slate-400">Start Node</label>
+              <select
+                value={startNode}
+                onChange={(e) => setStartNode?.(Number(e.target.value))}
+                className="w-full rounded-lg border border-slate-700 bg-slate-800/50 px-2 py-1 text-sm"
+              >
+                {Array.from({ length: numAvailableNodes }, (_, i) => (
+                  <option key={i} value={i} disabled={i === targetNode}>
+                    Node {i} {i === targetNode && '(target)'}
+                  </option>
+                ))}
+              </select>
             </div>
-          )}
+
+            <div className="space-y-1">
+              <label className="text-xs text-slate-400">Target Node</label>
+              <select
+                value={targetNode ?? ''}
+                onChange={(e) => setTargetNode?.(e.target.value ? Number(e.target.value) : null)}
+                className="w-full rounded-lg border border-slate-700 bg-slate-800/50 px-2 py-1 text-sm"
+              >
+                {Array.from({ length: numAvailableNodes }, (_, i) => (
+                  <option key={i} value={i} disabled={i === startNode}>
+                    Node {i} {i === startNode && '(start)'}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
       )}
 

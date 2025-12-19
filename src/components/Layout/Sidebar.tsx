@@ -51,7 +51,7 @@ function Sidebar({ activeCategory, onChange }: SidebarProps) {
   };
 
   return (
-    <aside className="flex h-[calc(100vh-120px)] flex-col gap-3 rounded-2xl border border-slate-800 bg-[#0c1224]/80 p-4 shadow-lg shadow-fuchsia-500/10">
+    <aside className="flex h-full flex-col gap-3 rounded-2xl border border-slate-800 bg-[#0c1224]/80 p-4 shadow-lg shadow-fuchsia-500/10">
       <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Algorithms</p>
       <div className="space-y-2">
         {categories.map((cat) => {

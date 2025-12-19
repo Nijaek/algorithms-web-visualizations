@@ -117,8 +117,8 @@ function KMeansContent({ onComplexityChange }: { onComplexityChange?: (meta: Com
   };
 
   return (
-    <div className="flex flex-col gap-3 md:flex-row">
-      <div className="flex-1 space-y-2 rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+    <div className="flex flex-col gap-3 md:flex-row flex-1 min-h-0">
+      <div className="flex-1 flex flex-col gap-2 rounded-xl border border-slate-800 bg-slate-900/40 p-4 min-h-0">
         <div className="flex items-center justify-between text-xs text-slate-400">
           <span>Steps: {stepIndex}</span>
           <span>Points: {points.length} | k = {clusters}</span>
@@ -127,7 +127,7 @@ function KMeansContent({ onComplexityChange }: { onComplexityChange?: (meta: Com
         <div
           ref={canvasRef}
           onClick={handleCanvasClick}
-          className="relative w-full aspect-[4/3] max-h-[28rem] overflow-hidden rounded-lg border border-slate-800 bg-[#0b1020] cursor-crosshair"
+          className="relative w-full flex-1 min-h-0 overflow-hidden rounded-lg border border-slate-800 bg-[#0b1020] cursor-crosshair"
         >
           {canvasPoints.map((p, idx) => (
             <div
@@ -156,7 +156,7 @@ function KMeansContent({ onComplexityChange }: { onComplexityChange?: (meta: Com
         <Instructions text="Click on the canvas to add points. The algorithm will cluster them automatically." />
       </div>
 
-      <div className="w-full max-w-xs space-y-3 rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-200">
+      <div className="w-full max-w-xs space-y-3 rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-200 max-h-full overflow-y-auto">
         <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Controls</p>
         <div className="flex gap-2">
           <button type="button" onClick={isPlaying ? () => setIsPlaying(false) : handleRun} className="flex-1 rounded-lg bg-cyan-600 px-3 py-2 text-sm font-semibold text-white hover:bg-cyan-500">
@@ -259,8 +259,8 @@ function LinearRegressionContent({ onComplexityChange }: { onComplexityChange?: 
   const r2 = currentStep?.type === 'done' ? currentStep.r2 : null;
 
   return (
-    <div className="flex flex-col gap-3 md:flex-row">
-      <div className="flex-1 space-y-2 rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+    <div className="flex flex-col gap-3 md:flex-row flex-1 min-h-0">
+      <div className="flex-1 flex flex-col gap-2 rounded-xl border border-slate-800 bg-slate-900/40 p-4 min-h-0">
         <div className="flex items-center justify-between text-xs text-slate-400">
           <span>Iteration: {currentStep?.type === 'gradient' ? currentStep.iteration : (currentStep?.type === 'done' ? iterations : 0)}</span>
           <span>Loss: {loss?.toFixed(4) ?? "—"}</span>
@@ -269,7 +269,7 @@ function LinearRegressionContent({ onComplexityChange }: { onComplexityChange?: 
         <div
           ref={canvasRef}
           onClick={handleCanvasClick}
-          className="relative w-full aspect-[4/3] max-h-[28rem] overflow-hidden rounded-lg border border-slate-800 bg-[#0b1020] cursor-crosshair"
+          className="relative w-full flex-1 min-h-0 overflow-hidden rounded-lg border border-slate-800 bg-[#0b1020] cursor-crosshair"
         >
           {/* Regression line */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
@@ -300,7 +300,7 @@ function LinearRegressionContent({ onComplexityChange }: { onComplexityChange?: 
         <Instructions text="Click on the canvas to add data points. Watch the regression line fit to your data." />
       </div>
 
-      <div className="w-full max-w-xs space-y-3 rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-200">
+      <div className="w-full max-w-xs space-y-3 rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-200 max-h-full overflow-y-auto">
         <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Controls</p>
         <div className="flex gap-2">
           <button type="button" onClick={isPlaying ? () => setIsPlaying(false) : handleRun} className="flex-1 rounded-lg bg-cyan-600 px-3 py-2 text-sm font-semibold text-white hover:bg-cyan-500">
@@ -431,8 +431,8 @@ function KNNContent({ onComplexityChange }: { onComplexityChange?: (meta: Comple
   const maxDist = distances.length > 0 ? Math.max(...distances) : 0;
 
   return (
-    <div className="flex flex-col gap-3 md:flex-row">
-      <div className="flex-1 space-y-2 rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+    <div className="flex flex-col gap-3 md:flex-row flex-1 min-h-0">
+      <div className="flex-1 flex flex-col gap-2 rounded-xl border border-slate-800 bg-slate-900/40 p-4 min-h-0">
         <div className="flex items-center justify-between text-xs text-slate-400">
           <span>Step: {stepIndex}/{steps.length}</span>
           <span>k = {k} | Points: {data.length}</span>
@@ -441,7 +441,7 @@ function KNNContent({ onComplexityChange }: { onComplexityChange?: (meta: Comple
         <div
           ref={canvasRef}
           onClick={handleCanvasClick}
-          className="relative w-full aspect-[4/3] max-h-[28rem] overflow-hidden rounded-lg border border-slate-800 bg-[#0b1020] cursor-crosshair"
+          className="relative w-full flex-1 min-h-0 overflow-hidden rounded-lg border border-slate-800 bg-[#0b1020] cursor-crosshair"
         >
           {/* Distance circle */}
           {maxDist > 0 && (
@@ -488,7 +488,7 @@ function KNNContent({ onComplexityChange }: { onComplexityChange?: (meta: Comple
         <Instructions text={isMovingQuery ? "Click to move the query point (?). Toggle mode below to add training points." : `Click to add Class ${selectedClass} points. Toggle mode to move the query point.`} />
       </div>
 
-      <div className="w-full max-w-xs space-y-3 rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-200">
+      <div className="w-full max-w-xs space-y-3 rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-200 max-h-full overflow-y-auto">
         <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Controls</p>
         <div className="flex gap-2">
           <button type="button" onClick={isPlaying ? () => setIsPlaying(false) : handleRun} className="flex-1 rounded-lg bg-cyan-600 px-3 py-2 text-sm font-semibold text-white hover:bg-cyan-500">
@@ -641,8 +641,8 @@ function DecisionTreeContent({ onComplexityChange }: { onComplexityChange?: (met
   const accuracy = currentStep?.type === 'done' ? currentStep.accuracy : null;
 
   return (
-    <div className="flex flex-col gap-3 md:flex-row">
-      <div className="flex-1 space-y-2 rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+    <div className="flex flex-col gap-3 md:flex-row flex-1 min-h-0">
+      <div className="flex-1 flex flex-col gap-2 rounded-xl border border-slate-800 bg-slate-900/40 p-4 min-h-0">
         <div className="flex items-center justify-between text-xs text-slate-400">
           <span>Step: {stepIndex}/{steps.length}</span>
           <span>Depth: {maxDepth} | Points: {data.length}</span>
@@ -651,7 +651,7 @@ function DecisionTreeContent({ onComplexityChange }: { onComplexityChange?: (met
         <div
           ref={canvasRef}
           onClick={handleCanvasClick}
-          className="relative w-full aspect-[4/3] max-h-[28rem] overflow-hidden rounded-lg border border-slate-800 bg-[#0b1020] cursor-crosshair"
+          className="relative w-full flex-1 min-h-0 overflow-hidden rounded-lg border border-slate-800 bg-[#0b1020] cursor-crosshair"
         >
           {/* Decision regions */}
           {regions.map((region, idx) => (
@@ -686,7 +686,7 @@ function DecisionTreeContent({ onComplexityChange }: { onComplexityChange?: (met
         <Instructions text={`Click to add Class ${selectedClass} points. Use the class selector to switch between classes.`} />
       </div>
 
-      <div className="w-full max-w-xs space-y-3 rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-200">
+      <div className="w-full max-w-xs space-y-3 rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-200 max-h-full overflow-y-auto">
         <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Controls</p>
         <div className="flex gap-2">
           <button type="button" onClick={isPlaying ? () => setIsPlaying(false) : handleRun} className="flex-1 rounded-lg bg-cyan-600 px-3 py-2 text-sm font-semibold text-white hover:bg-cyan-500">
@@ -824,8 +824,8 @@ function LogisticRegressionContent({ onComplexityChange }: { onComplexityChange?
   const y1 = getDecisionBoundaryY(1);
 
   return (
-    <div className="flex flex-col gap-3 md:flex-row">
-      <div className="flex-1 space-y-2 rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+    <div className="flex flex-col gap-3 md:flex-row flex-1 min-h-0">
+      <div className="flex-1 flex flex-col gap-2 rounded-xl border border-slate-800 bg-slate-900/40 p-4 min-h-0">
         <div className="flex items-center justify-between text-xs text-slate-400">
           <span>Iteration: {currentStep?.type === 'gradient' ? currentStep.iteration : (currentStep?.type === 'done' ? iterations : 0)}</span>
           <span>Loss: {loss?.toFixed(4) ?? "—"}</span>
@@ -834,7 +834,7 @@ function LogisticRegressionContent({ onComplexityChange }: { onComplexityChange?
         <div
           ref={canvasRef}
           onClick={handleCanvasClick}
-          className="relative w-full aspect-[4/3] max-h-[28rem] overflow-hidden rounded-lg border border-slate-800 bg-[#0b1020] cursor-crosshair"
+          className="relative w-full flex-1 min-h-0 overflow-hidden rounded-lg border border-slate-800 bg-[#0b1020] cursor-crosshair"
         >
           {/* Decision boundary line */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
@@ -865,7 +865,7 @@ function LogisticRegressionContent({ onComplexityChange }: { onComplexityChange?
         <Instructions text={`Click to add Class ${selectedClass} points. Use the class selector to switch between classes.`} />
       </div>
 
-      <div className="w-full max-w-xs space-y-3 rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-200">
+      <div className="w-full max-w-xs space-y-3 rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-200 max-h-full overflow-y-auto">
         <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Controls</p>
         <div className="flex gap-2">
           <button type="button" onClick={isPlaying ? () => setIsPlaying(false) : handleRun} className="flex-1 rounded-lg bg-cyan-600 px-3 py-2 text-sm font-semibold text-white hover:bg-cyan-500">
@@ -941,7 +941,7 @@ export default function MachineLearningVisualizer({ onComplexityChange }: Machin
   const [activeAlgorithm, setActiveAlgorithm] = useState<MLAlgorithm>("kmeans");
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 h-full">
       {/* Algorithm Selector */}
       <div className="flex flex-wrap items-center gap-3 text-sm text-slate-300">
         <span className="rounded-full bg-amber-400/30 px-3 py-1 text-amber-100">Machine Learning</span>

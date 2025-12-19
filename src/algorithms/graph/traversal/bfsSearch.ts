@@ -6,18 +6,30 @@ export function* bfsSearch(
   target: string | number
 ): Generator<SearchStep, void, unknown> {
   const visited = new Set<string | number>();
-  const frontier = [start];
+  const frontier: (string | number)[] = [];
   const predecessors = new Map<string | number, string | number>();
   let found = false;
 
-  // Initialize search
+  // Initial step - show clean state before search begins
+  yield {
+    type: 'visit',
+    node: start,
+    target,
+    visited: [],
+    frontier: [],
+    found: false,
+    path: []
+  };
+
+  // Start the search - add start node
   visited.add(start);
+  frontier.push(start);
   yield {
     type: 'visit',
     node: start,
     target,
     visited: Array.from(visited),
-    frontier,
+    frontier: [...frontier],
     found: start === target,
     path: start === target ? [start] : []
   };

@@ -6,17 +6,31 @@ export function* dfsSearch(
   target: string | number
 ): Generator<SearchStep, void, unknown> {
   const visited = new Set<string | number>();
-  const stack: Array<{ node: string | number; depth: number }> = [{ node: start, depth: 0 }];
+  const stack: Array<{ node: string | number; depth: number }> = [];
   const predecessors = new Map<string | number, string | number>();
   let found = false;
 
-  // Initialize search
+  // Initial step - show clean state before search begins
   yield {
     type: 'visit',
     node: start,
     target,
-    visited: [start],
-    frontier: [start],
+    visited: [],
+    frontier: [],
+    depth: 0,
+    found: false,
+    path: []
+  };
+
+  // Start the search - add start node
+  visited.add(start);
+  stack.push({ node: start, depth: 0 });
+  yield {
+    type: 'visit',
+    node: start,
+    target,
+    visited: Array.from(visited),
+    frontier: stack.map(s => s.node),
     depth: 0,
     found: start === target,
     path: start === target ? [start] : []
@@ -26,8 +40,6 @@ export function* dfsSearch(
     found = true;
     return;
   }
-
-  visited.add(start);
 
   // DFS loop
   while (stack.length > 0 && !found) {

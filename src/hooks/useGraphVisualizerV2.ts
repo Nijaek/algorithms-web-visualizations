@@ -262,29 +262,23 @@ export function useGraphVisualizerV2() {
         break;
       }
       case "bfs": {
-        if (useTargetSearch && targetNode !== null) {
-          // Use new target-based search
-          generator = bfsSearch(unifiedGraph, startNode, targetNode);
-        } else {
-          // Use legacy traversal
-          generator = graphBFSSteps({
-            nodes: unifiedGraph.nodes.map((n, i) => ({ id: i })),
-            edges: []
-          }, startNode);
+        // Always use target-based search for BFS
+        // Wait for targetNode to be set before generating steps
+        if (targetNode === null) {
+          setSteps([]);
+          return;
         }
+        generator = bfsSearch(unifiedGraph, startNode, targetNode);
         break;
       }
       case "dfs": {
-        if (useTargetSearch && targetNode !== null) {
-          // Use new target-based search
-          generator = dfsSearch(unifiedGraph, startNode, targetNode);
-        } else {
-          // Use legacy traversal
-          generator = graphDFSSteps({
-            nodes: unifiedGraph.nodes.map((n, i) => ({ id: i })),
-            edges: []
-          }, startNode);
+        // Always use target-based search for DFS
+        // Wait for targetNode to be set before generating steps
+        if (targetNode === null) {
+          setSteps([]);
+          return;
         }
+        generator = dfsSearch(unifiedGraph, startNode, targetNode);
         break;
       }
       default:
@@ -294,7 +288,7 @@ export function useGraphVisualizerV2() {
     setSteps(Array.from(generator));
     setStepIndex(0);
     setIsPlaying(false);
-  }, [algorithm, unifiedGraph, legacyNodes, useTargetSearch, targetNode, startNode]);
+  }, [algorithm, unifiedGraph, legacyNodes, targetNode, startNode]);
 
   useEffect(() => {
     if (!isPlaying) return;

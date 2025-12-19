@@ -212,12 +212,12 @@ function App() {
   }, [activeCategory]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0b1020] to-[#05070f] text-slate-100">
+    <div className="h-screen flex flex-col bg-gradient-to-b from-[#0b1020] to-[#05070f] text-slate-100 overflow-hidden">
       <TopBar />
-      <div className="grid grid-cols-[280px_1fr] gap-6 px-6 pb-10">
+      <div className="flex-1 grid grid-cols-[280px_1fr] gap-6 px-6 pb-6 min-h-0">
         <Sidebar activeCategory={activeCategory} onChange={setActiveCategory} />
-        <main className="space-y-4">
-          <div className="rounded-2xl border border-slate-800 bg-[#0c1224]/80 p-4 shadow-lg shadow-cyan-500/10">
+        <main className="flex flex-col gap-4 min-h-0">
+          <div className="flex-1 rounded-2xl border border-slate-800 bg-[#0c1224]/80 p-4 shadow-lg shadow-cyan-500/10 min-h-0 overflow-hidden">
             {activeCategory === "sorting" && <SortingVisualizer onComplexityChange={setActiveComplexity} />}
             {activeCategory === "pathfinding" && <PathfindingVisualizer onComplexityChange={setActiveComplexity} />}
             {activeCategory === "kmeans" && <MachineLearningVisualizer onComplexityChange={setActiveComplexity} />}

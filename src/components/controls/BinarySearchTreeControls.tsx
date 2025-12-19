@@ -76,7 +76,7 @@ export default function BinarySearchTreeControls({
   };
 
   return (
-    <div className={`w-full max-w-sm space-y-4 rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-200 ${className}`}>
+    <div className={`w-full max-w-sm space-y-4 rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-200 max-h-full overflow-y-auto ${className}`}>
       <p className="text-xs uppercase tracking-[0.2em] text-slate-500">BST Controls</p>
 
       {/* Operation inputs */}

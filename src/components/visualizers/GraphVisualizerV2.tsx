@@ -171,7 +171,7 @@ export default function GraphVisualizerV2({ onComplexityChange }: GraphVisualize
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 h-full">
       <div className="flex flex-wrap items-center gap-3 text-sm text-slate-300">
         <span className="rounded-full bg-green-500/30 px-3 py-1 text-green-100">Graph</span>
         <div className="flex flex-wrap gap-2">
@@ -192,9 +192,9 @@ export default function GraphVisualizerV2({ onComplexityChange }: GraphVisualize
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 md:flex-row">
-        <div className="flex-1 rounded-xl border border-slate-800 bg-slate-900/40 p-4">
-          <div className="mb-2 flex items-center justify-between text-xs text-slate-400">
+      <div className="flex flex-col gap-3 md:flex-row flex-1 min-h-0">
+        <div className="flex-1 flex flex-col gap-2 rounded-xl border border-slate-800 bg-slate-900/40 p-4 min-h-0">
+          <div className="flex items-center justify-between text-xs text-slate-400">
             <span>Step: {stepIndex + 1} / {totalSteps}</span>
             <span>Nodes: {numNodes}</span>
             {(algorithm === 'bellman' || algorithm === 'topo') && (
@@ -212,7 +212,7 @@ export default function GraphVisualizerV2({ onComplexityChange }: GraphVisualize
 
           {/* Search status */}
           {'target' in currentStep && (
-            <div className="mb-2 text-xs">
+            <div className="text-xs">
               {(currentStep as SearchStep).type === 'found' && (
                 <span className="text-amber-400">Target found! Path: {(currentStep as SearchStep).path?.join(' → ')}</span>
               )}
@@ -225,7 +225,7 @@ export default function GraphVisualizerV2({ onComplexityChange }: GraphVisualize
             </div>
           )}
 
-          <div className="relative w-full aspect-[4/3] max-h-[28rem] overflow-hidden rounded-lg border border-slate-800 bg-[#0b1020] p-3">
+          <div className="relative w-full flex-1 min-h-0 overflow-hidden rounded-lg border border-slate-800 bg-[#0b1020] p-3">
             <svg viewBox="0 0 400 400" className="w-full h-full">
               {/* Define arrow markers */}
               <defs>

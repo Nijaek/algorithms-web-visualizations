@@ -96,7 +96,7 @@ export default function DataStructuresVisualizer({ onComplexityChange }: DataStr
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 h-full">
       {/* Data Structure Selector */}
       <div className="flex flex-wrap items-center gap-3 text-sm text-slate-300">
         <span className="rounded-full bg-purple-500/30 px-3 py-1 text-purple-100">Data Structures</span>
@@ -121,7 +121,7 @@ export default function DataStructuresVisualizer({ onComplexityChange }: DataStr
       {/* BST Visualizer */}
       {activeDS === 'bst' && (
         <div className="flex flex-col gap-3 md:flex-row flex-1 min-h-0">
-          <div className="flex-1 rounded-xl border border-slate-800 bg-slate-900/40 p-4 flex flex-col min-h-[500px]">
+          <div className="flex-1 rounded-xl border border-slate-800 bg-slate-900/40 p-4 flex flex-col min-h-0">
             <div className="mb-2 flex items-center justify-between text-xs text-slate-400">
               <span>Data Structure: {complexityByDS.bst.name}</span>
               <span>Operation: {bst.operation || 'Idle'}</span>
@@ -158,7 +158,7 @@ export default function DataStructuresVisualizer({ onComplexityChange }: DataStr
       {/* AVL Tree Visualizer */}
       {activeDS === 'avl' && (
         <div className="flex flex-col gap-3 md:flex-row flex-1 min-h-0">
-          <div className="flex-1 rounded-xl border border-slate-800 bg-slate-900/40 p-4 flex flex-col min-h-[500px]">
+          <div className="flex-1 rounded-xl border border-slate-800 bg-slate-900/40 p-4 flex flex-col min-h-0">
             <div className="mb-2 flex items-center justify-between text-xs text-slate-400">
               <span>Data Structure: {complexityByDS.avl.name}</span>
               <span>Operation: {avl.operation || 'Idle'}</span>
