@@ -90,9 +90,6 @@ export default function DataStructuresVisualizer({ onComplexityChange }: DataStr
     if (ds === activeDS) return;
     setActiveDS(ds);
     onComplexityChange?.(complexityByDS[ds]);
-    // Clear the previous data structure
-    if (ds !== 'bst') bst.clear();
-    if (ds !== 'avl') avl.clear();
   };
 
   return (

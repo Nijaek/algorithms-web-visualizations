@@ -321,17 +321,31 @@ export function useRedBlackTree({ onStatsChange }: UseRedBlackTreeProps = {}) {
 
     setTreeValues(buildValues);
 
-    // Build the tree synchronously
-    let finalTree: RBTreeNode | null = null;
-    buildValues.forEach(v => {
-      finalTree = rbInsertSync(finalTree, v);
-    });
-    setTree(finalTree);
-    setDisplayTree(finalTree);
+    // Generate animation steps for each insertion
+    const allSteps: RBTreeStep[] = [];
+    let currentTree: RBTreeNode | null = null;
 
-    // For now, just show the final result (build animation can be complex)
-    setSteps([{ type: 'done', tree: finalTree, operation: 'build' }]);
+    buildValues.forEach(value => {
+      const generator = rbInsert(currentTree, value);
+      const insertSteps = Array.from(generator);
+
+      // Add all steps except the 'done' step (we'll add one at the end)
+      insertSteps.forEach(step => {
+        if (step.type === 'done') {
+          currentTree = step.tree;
+        } else {
+          allSteps.push(step);
+        }
+      });
+    });
+
+    // Add final done step
+    allSteps.push({ type: 'done', tree: currentTree, operation: 'build' });
+
+    setTree(currentTree);
+    setSteps(allSteps);
     setStepIndex(0);
+    setIsPlaying(true);
   }, []);
 
   const clear = useCallback(() => {
