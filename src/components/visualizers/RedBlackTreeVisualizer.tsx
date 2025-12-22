@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useRedBlackTree } from '../../hooks/useRedBlackTree';
 import { ComplexityMeta } from '../../types/complexity';
 import { RBTreeNode } from '../../types/dataStructures';
@@ -46,23 +46,6 @@ export default function RedBlackTreeVisualizer({ onComplexityChange }: RedBlackT
 
   const [valueInput, setValueInput] = useState('');
   const [searchInput, setSearchInput] = useState('');
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 600, height: 400 });
-
-  useEffect(() => {
-    const updateDimensions = () => {
-      if (containerRef.current) {
-        setDimensions({
-          width: containerRef.current.clientWidth,
-          height: Math.max(400, containerRef.current.clientHeight)
-        });
-      }
-    };
-
-    updateDimensions();
-    window.addEventListener('resize', updateDimensions);
-    return () => window.removeEventListener('resize', updateDimensions);
-  }, []);
 
   const handleInsert = () => {
     const value = parseInt(valueInput);
@@ -87,172 +70,235 @@ export default function RedBlackTreeVisualizer({ onComplexityChange }: RedBlackT
     }
   };
 
-  // Calculate tree layout
-  const calculateLayout = (node: RBTreeNode | null, depth: number, left: number, right: number): Map<string, { x: number; y: number }> => {
-    const positions = new Map<string, { x: number; y: number }>();
-    if (!node) return positions;
-
-    const x = (left + right) / 2;
-    const y = depth * 60 + 40;
-    positions.set(node.id, { x, y });
-
-    const mid = (left + right) / 2;
-    const leftPositions = calculateLayout(node.left, depth + 1, left, mid);
-    const rightPositions = calculateLayout(node.right, depth + 1, mid, right);
-
-    leftPositions.forEach((pos, id) => positions.set(id, pos));
-    rightPositions.forEach((pos, id) => positions.set(id, pos));
-
-    return positions;
+  // Calculate tree height
+  const getTreeHeight = (node: RBTreeNode | null): number => {
+    if (!node) return 0;
+    return 1 + Math.max(getTreeHeight(node.left), getTreeHeight(node.right));
   };
 
-  const positions = calculateLayout(tree, 0, 0, dimensions.width);
+  // Count nodes in tree
+  const countNodes = (node: RBTreeNode | null): number => {
+    if (!node) return 0;
+    return 1 + countNodes(node.left) + countNodes(node.right);
+  };
 
-  const getNodeStyle = (nodeId: string, color: 'red' | 'black') => {
-    const isActive = activeNodeId === nodeId;
-    const isRecoloring = recoloringNodeId === nodeId;
-    const isRotating = rotatingNodeId === nodeId;
-    const isViolation = violationNodeId === nodeId;
-    const isInPath = searchPath.includes(nodeId);
+  // Calculate tree layout using in-order traversal (same as BST/AVL)
+  const { positions, width, height, nodeRadius } = useMemo(() => {
+    const positionsMap = new Map<string, { x: number; y: number }>();
 
-    let boxShadow = 'none';
-    if (isActive) boxShadow = '0 0 20px rgba(6, 182, 212, 0.7)';
-    if (isRecoloring) boxShadow = '0 0 25px rgba(168, 85, 247, 0.8)';
-    if (isRotating) boxShadow = '0 0 25px rgba(59, 130, 246, 0.8)';
-    if (isViolation) boxShadow = '0 0 25px rgba(245, 158, 11, 0.8)';
+    if (!tree) {
+      return { positions: positionsMap, width: 800, height: 400, nodeRadius: 25 };
+    }
 
-    return {
-      backgroundColor: color === 'red' ? '#dc2626' : '#1e293b',
-      borderColor: color === 'red' ? '#fca5a5' : '#475569',
-      boxShadow,
-      transform: isActive || isRecoloring || isRotating ? 'scale(1.15)' : 'scale(1)',
-      transition: 'all 0.3s ease-in-out',
-      outline: isInPath ? '3px solid #06b6d4' : 'none',
-      outlineOffset: '2px'
+    const treeHeight = getTreeHeight(tree);
+    const nodeCount = countNodes(tree);
+
+    // Dynamic sizing based on tree dimensions (same as BST/AVL)
+    const radius = Math.max(18, Math.min(25, 28 - treeHeight));
+    const levelHeight = Math.max(60, Math.min(80, 90 - treeHeight * 5));
+    const horizontalSpacing = radius * 3;
+
+    // First pass: assign x-positions based on in-order traversal
+    let xIndex = 0;
+    const xPositions = new Map<string, number>();
+
+    const inOrderTraversal = (node: RBTreeNode | null) => {
+      if (!node) return;
+      inOrderTraversal(node.left);
+      xPositions.set(node.id, xIndex++);
+      inOrderTraversal(node.right);
     };
+
+    inOrderTraversal(tree);
+
+    // Calculate the width needed for the tree
+    const treeWidth = nodeCount * horizontalSpacing;
+    const canvasWidth = Math.max(800, treeWidth + 100);
+    const canvasHeight = Math.max(400, treeHeight * levelHeight + 100);
+
+    // Calculate offset to center the tree horizontally
+    const startX = (canvasWidth - treeWidth) / 2 + horizontalSpacing / 2;
+
+    // Second pass: assign final positions
+    const assignPositions = (node: RBTreeNode | null, depth: number) => {
+      if (!node) return;
+
+      const xPos = xPositions.get(node.id)!;
+      const x = startX + xPos * horizontalSpacing;
+      const y = 50 + depth * levelHeight;
+
+      positionsMap.set(node.id, { x, y });
+
+      assignPositions(node.left, depth + 1);
+      assignPositions(node.right, depth + 1);
+    };
+
+    assignPositions(tree, 0);
+
+    return { positions: positionsMap, width: canvasWidth, height: canvasHeight, nodeRadius: radius };
+  }, [tree]);
+
+  // Check if node should have glow effect (consistent with BST/AVL)
+  const shouldGlow = (nodeId: string): boolean => {
+    return activeNodeId === nodeId ||
+           recoloringNodeId === nodeId ||
+           rotatingNodeId === nodeId ||
+           violationNodeId === nodeId;
   };
 
-  const renderTree = (node: RBTreeNode | null): React.ReactNode => {
-    if (!node) return null;
-
-    const pos = positions.get(node.id);
-    if (!pos) return null;
-
-    const parentPos = node.parent ? positions.get(node.parent.id) : null;
-
-    return (
-      <React.Fragment key={node.id}>
-        {/* Edge to parent */}
-        {parentPos && (
-          <line
-            x1={parentPos.x}
-            y1={parentPos.y + 18}
-            x2={pos.x}
-            y2={pos.y - 18}
-            stroke={searchPath.includes(node.id) ? '#06b6d4' : '#475569'}
-            strokeWidth={searchPath.includes(node.id) ? 3 : 2}
-            className="transition-all duration-300"
-          />
-        )}
-        {/* Node */}
-        <g transform={`translate(${pos.x}, ${pos.y})`}>
-          <circle
-            r="22"
-            style={getNodeStyle(node.id, node.color)}
-            className="transition-all duration-300"
-          />
-          <text
-            textAnchor="middle"
-            dominantBaseline="middle"
-            fill="white"
-            fontSize="14"
-            fontWeight="bold"
-            fontFamily="monospace"
-          >
-            {node.value}
-          </text>
-          {/* Color indicator */}
-          <text
-            y="35"
-            textAnchor="middle"
-            fill={node.color === 'red' ? '#fca5a5' : '#94a3b8'}
-            fontSize="10"
-          >
-            {node.color.toUpperCase()}
-          </text>
-        </g>
-        {/* Render children */}
-        {renderTree(node.left)}
-        {renderTree(node.right)}
-      </React.Fragment>
-    );
+  // Get edge color based on path (consistent with BST/AVL)
+  const getEdgeColor = (nodeId: string): string => {
+    if (searchPath.includes(nodeId)) return '#3b82f6'; // Blue for path
+    return '#475569'; // Default gray
   };
+
+  // Collect all nodes for rendering (like BST/AVL approach)
+  const collectNodes = (node: RBTreeNode | null): RBTreeNode[] => {
+    if (!node) return [];
+    return [node, ...collectNodes(node.left), ...collectNodes(node.right)];
+  };
+
+  const allNodes = useMemo(() => collectNodes(tree), [tree]);
 
   return (
-    <div className="flex flex-col gap-4">
-      {/* Header */}
-      <div className="flex flex-wrap items-center gap-3 text-sm text-slate-300">
-        <span className="rounded-full bg-red-500/30 px-3 py-1 text-red-100">Red-Black Tree</span>
-        <div className="flex gap-2 items-center">
-          <div className="flex items-center gap-1">
-            <div className="w-4 h-4 rounded-full bg-red-600 border border-red-400"></div>
-            <span className="text-xs text-slate-400">Red</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="w-4 h-4 rounded-full bg-slate-800 border border-slate-500"></div>
-            <span className="text-xs text-slate-400">Black</span>
-          </div>
+    <div className="flex flex-col gap-3 md:flex-row flex-1 min-h-0">
+      {/* Visualizer */}
+      <div className="flex-1 rounded-xl border border-slate-800 bg-slate-900/40 p-4 flex flex-col min-h-0">
+        <div className="mb-2 flex items-center justify-between text-xs text-slate-400">
+          <span>Data Structure: Red-Black Tree</span>
+          <span>Operation: {operation || 'Idle'}</span>
         </div>
-      </div>
 
-      <div className="flex flex-col gap-3 md:flex-row">
-        {/* Visualizer */}
-        <div className="flex-1 rounded-xl border border-slate-800 bg-slate-900/40 p-4 flex flex-col min-h-[500px]">
-          <div className="mb-2 flex items-center justify-between text-xs text-slate-400">
-            <span>Data Structure: Red-Black Tree</span>
-            <span>Operation: {operation || 'Idle'}</span>
-          </div>
+        <div className="flex-1 flex items-center justify-center bg-[#0b1020] rounded-lg overflow-auto p-4">
+            <svg
+              width="100%"
+              height="100%"
+              className="w-full h-full"
+              viewBox={`0 0 ${width} ${Math.max(400, height)}`}
+              preserveAspectRatio="xMidYMid meet"
+            >
+              <defs>
+                <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feDropShadow dx="0" dy="0" stdDeviation="4" floodColor="#22d3ee" floodOpacity="0.65" />
+                </filter>
+              </defs>
 
-          <div
-            ref={containerRef}
-            className="flex-1 bg-[#0b1020] rounded-lg overflow-auto min-h-[400px]"
-          >
-            {/* Step info */}
-            {currentStep && (
-              <div className="p-2 text-center text-sm text-slate-300 border-b border-slate-800">
-                {currentStep.type === 'compare' && `Comparing ${currentStep.searchValue} with ${currentStep.value} → go ${currentStep.direction}`}
-                {currentStep.type === 'insert' && `Inserting ${currentStep.value} as ${currentStep.color} node`}
-                {currentStep.type === 'recolor' && `Recoloring node: ${currentStep.fromColor} → ${currentStep.toColor}`}
-                {currentStep.type === 'rotate-left' && `Rotating left`}
-                {currentStep.type === 'rotate-right' && `Rotating right`}
-                {currentStep.type === 'fix-violation' && `Fixing ${currentStep.violationType} violation`}
-                {currentStep.type === 'search' && (currentStep.found ? `Found!` : 'Not found')}
-                {currentStep.type === 'delete' && `Deleting ${currentStep.value}`}
-                {currentStep.type === 'delete-fixup' && `Delete fixup case ${currentStep.case}`}
-                {currentStep.type === 'transplant' && `Transplanting nodes`}
-                {currentStep.type === 'done' && `Operation complete: ${currentStep.operation}`}
-              </div>
-            )}
+              {/* Draw edges (like BST/AVL) */}
+              {allNodes.map(node => {
+                const pos = positions.get(node.id);
+                if (!pos) return null;
+                const edges = [];
 
-            {/* Tree Visualization */}
-            {!tree ? (
-              <div className="flex items-center justify-center h-full text-slate-500">
-                <span>Empty tree. Insert a node to begin.</span>
-              </div>
-            ) : (
-              <svg
-                width={dimensions.width}
-                height={Math.max(400, stats.height * 70 + 100)}
-                className="mx-auto"
-              >
-                {renderTree(tree)}
-              </svg>
-            )}
+                if (node.left) {
+                  const leftPos = positions.get(node.left.id);
+                  if (leftPos) {
+                    edges.push(
+                      <line
+                        key={`edge-${node.id}-${node.left.id}`}
+                        x1={pos.x}
+                        y1={pos.y}
+                        x2={leftPos.x}
+                        y2={leftPos.y}
+                        stroke={getEdgeColor(node.left.id)}
+                        strokeWidth="2"
+                        className="transition-all duration-300"
+                      />
+                    );
+                  }
+                }
+
+                if (node.right) {
+                  const rightPos = positions.get(node.right.id);
+                  if (rightPos) {
+                    edges.push(
+                      <line
+                        key={`edge-${node.id}-${node.right.id}`}
+                        x1={pos.x}
+                        y1={pos.y}
+                        x2={rightPos.x}
+                        y2={rightPos.y}
+                        stroke={getEdgeColor(node.right.id)}
+                        strokeWidth="2"
+                        className="transition-all duration-300"
+                      />
+                    );
+                  }
+                }
+
+                return edges;
+              })}
+
+              {/* Draw nodes (like BST/AVL) */}
+              {allNodes.map(node => {
+                const pos = positions.get(node.id);
+                if (!pos) return null;
+
+                const hasGlow = shouldGlow(node.id);
+
+                return (
+                  <g key={node.id}>
+                    <circle
+                      cx={pos.x}
+                      cy={pos.y}
+                      r={nodeRadius}
+                      fill={node.color === 'red' ? '#dc2626' : '#1e293b'}
+                      stroke="#1e293b"
+                      strokeWidth="2"
+                      filter={hasGlow ? 'url(#glow)' : undefined}
+                      className="transition-all duration-300"
+                    />
+                    <text
+                      x={pos.x}
+                      y={pos.y + 5}
+                      textAnchor="middle"
+                      fill="white"
+                      style={{
+                        fontSize: `${Math.max(12, nodeRadius * 0.7)}px`,
+                        fontWeight: 'bold',
+                        pointerEvents: 'none'
+                      }}
+                    >
+                      {node.value}
+                    </text>
+                    {/* Color indicator below node */}
+                    <text
+                      x={pos.x}
+                      y={pos.y + nodeRadius + 14}
+                      textAnchor="middle"
+                      fill={node.color === 'red' ? '#fca5a5' : '#94a3b8'}
+                      style={{
+                        fontSize: '9px',
+                        pointerEvents: 'none'
+                      }}
+                    >
+                      {node.color.toUpperCase()}
+                    </text>
+                  </g>
+                );
+              })}
+
+              {/* Show step information */}
+              {currentStep && (
+                <text x={width / 2} y="25" textAnchor="middle" fill="white" style={{ fontSize: '14px' }}>
+                  {currentStep.type === 'compare' && `Comparing ${currentStep.searchValue} with ${currentStep.value} → go ${currentStep.direction}`}
+                  {currentStep.type === 'insert' && `Inserting ${currentStep.value} as ${currentStep.color} node`}
+                  {currentStep.type === 'recolor' && `Recoloring node: ${currentStep.fromColor} → ${currentStep.toColor}`}
+                  {currentStep.type === 'rotate-left' && `Rotating left`}
+                  {currentStep.type === 'rotate-right' && `Rotating right`}
+                  {currentStep.type === 'fix-violation' && `Fixing ${currentStep.violationType} violation`}
+                  {currentStep.type === 'search' && (currentStep.found ? `Found!` : 'Not found')}
+                  {currentStep.type === 'delete' && `Deleting ${currentStep.value}`}
+                  {currentStep.type === 'delete-fixup' && `Delete fixup case ${currentStep.case}`}
+                  {currentStep.type === 'transplant' && `Transplanting nodes`}
+                  {currentStep.type === 'done' && `Operation complete: ${currentStep.operation}`}
+                </text>
+              )}
+            </svg>
           </div>
         </div>
 
         {/* Controls */}
-        <div className="w-full md:w-80 rounded-xl border border-slate-800 bg-slate-900/40 p-4 space-y-4">
+        <div className="w-full max-w-sm rounded-xl border border-slate-800 bg-slate-900/40 p-4 space-y-4 min-h-0 max-h-full overflow-y-auto">
           <h3 className="text-sm font-semibold text-slate-200 tracking-wide">RED-BLACK TREE CONTROLS</h3>
 
           {/* Insert */}
@@ -398,6 +444,5 @@ export default function RedBlackTreeVisualizer({ onComplexityChange }: RedBlackT
           </div>
         </div>
       </div>
-    </div>
   );
 }
