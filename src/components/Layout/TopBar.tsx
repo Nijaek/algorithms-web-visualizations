@@ -1,4 +1,4 @@
-import logo from "../../assets/logo.png";
+import logo from "/favicon.svg";
 
 function TopBar() {
   return (
