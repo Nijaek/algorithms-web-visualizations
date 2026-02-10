@@ -4,7 +4,7 @@ function TopBar() {
   return (
     <header className="sticky top-0 z-10 mb-4 flex items-center justify-between border-b border-slate-800 bg-[#0b1020]/80 px-2 py-4 backdrop-blur">
       <div className="flex items-center gap-3">
-        <a href="https://nijae.dev" className="relative h-10 w-10 rounded-xl bg-white shadow-lg overflow-hidden block hover:scale-105 transition-transform">
+        <a href="https://nijae.dev" className="relative h-10 w-10 rounded-xl shadow-lg overflow-hidden block hover:scale-105 transition-transform">
           <img src={logo} alt="Logo" className="h-full w-full object-cover" />
         </a>
         <div>
