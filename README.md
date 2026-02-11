@@ -30,3 +30,7 @@ npm run build
 ## Documentation
 
 - [UI Style Guide](docs/UI-STYLE-GUIDE.md) – Styling conventions for visualizers
+
+## License
+
+[MIT](LICENSE)
