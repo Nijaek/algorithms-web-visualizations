@@ -44,7 +44,9 @@ export default function VisualizerLayout({
         </div>
 
         {/* Right: controls */}
-        {controls}
+        <div className="min-h-0 md:max-h-full">
+          {controls}
+        </div>
       </div>
     </div>
   );

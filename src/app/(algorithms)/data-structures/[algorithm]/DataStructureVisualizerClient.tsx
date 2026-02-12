@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAlgorithm } from "@/contexts/AlgorithmContext";
 import { AlgorithmPills, NeonBadge } from "@/components/ui";
@@ -40,17 +40,19 @@ interface Props {
 export default function DataStructureVisualizerClient({ initialAlgorithm }: Props) {
   const router = useRouter();
   const { setComplexity } = useAlgorithm();
-  const activeDS = slugToDS[initialAlgorithm] || "bst";
+  const [currentAlgorithm, setCurrentAlgorithm] = useState(initialAlgorithm);
+  const activeDS = slugToDS[currentAlgorithm] || "bst";
 
   const bst = useBinarySearchTree({});
   const avl = useAVLTree({});
 
   useEffect(() => {
-    const entry = getAlgorithm(initialAlgorithm);
+    const entry = getAlgorithm(currentAlgorithm);
     if (entry) setComplexity(entry.complexity);
-  }, [initialAlgorithm, setComplexity]);
+  }, [currentAlgorithm, setComplexity]);
 
   const handleDSChange = (slug: string) => {
+    setCurrentAlgorithm(slug);
     router.push(`/data-structures/${slug}`, { scroll: false });
   };
 
@@ -64,7 +66,7 @@ export default function DataStructureVisualizerClient({ initialAlgorithm }: Prop
         <NeonBadge label="Data Structures" color="purple" />
         <AlgorithmPills
           algorithms={dsAlgorithms}
-          active={initialAlgorithm}
+          active={currentAlgorithm}
           onChange={handleDSChange}
           accentColor="purple"
         />
@@ -115,16 +117,32 @@ export default function DataStructureVisualizerClient({ initialAlgorithm }: Prop
       )}
 
       {/* Heap */}
-      {activeDS === "heap" && <HeapVisualizer onComplexityChange={complexityCallback} />}
+      {activeDS === "heap" && (
+        <div className="flex-1 min-h-0 overflow-y-auto">
+          <HeapVisualizer onComplexityChange={complexityCallback} />
+        </div>
+      )}
 
       {/* Hash Table */}
-      {activeDS === "hashtable" && <HashTableVisualizer onComplexityChange={complexityCallback} />}
+      {activeDS === "hashtable" && (
+        <div className="flex-1 min-h-0 overflow-y-auto">
+          <HashTableVisualizer onComplexityChange={complexityCallback} />
+        </div>
+      )}
 
       {/* Linked List */}
-      {activeDS === "linkedlist" && <LinkedListVisualizer onComplexityChange={complexityCallback} />}
+      {activeDS === "linkedlist" && (
+        <div className="flex-1 min-h-0 overflow-y-auto">
+          <LinkedListVisualizer onComplexityChange={complexityCallback} />
+        </div>
+      )}
 
       {/* Red-Black Tree */}
-      {activeDS === "rbtree" && <RedBlackTreeVisualizer onComplexityChange={complexityCallback} />}
+      {activeDS === "rbtree" && (
+        <div className="flex-1 min-h-0 overflow-y-auto">
+          <RedBlackTreeVisualizer onComplexityChange={complexityCallback} />
+        </div>
+      )}
     </div>
   );
 }
