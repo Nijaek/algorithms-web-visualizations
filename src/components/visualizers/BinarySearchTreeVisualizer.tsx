@@ -175,7 +175,7 @@ export default function BinarySearchTreeVisualizer({
   };
 
   return (
-    <div className={`relative bg-[#0b1020] rounded-lg overflow-hidden min-h-[450px] ${className}`}>
+    <div className={`relative bg-[#0b1020] rounded-lg overflow-hidden min-h-0 ${className}`}>
       <svg
         className="absolute inset-0 w-full h-full"
         viewBox={`0 0 ${width} ${Math.max(400, height)}`}
