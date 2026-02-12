@@ -15,7 +15,7 @@ export default function AlgorithmsLayout({
         <TopBar />
         {/* Mobile nav - visible below lg */}
         <MobileNav />
-        <div className="flex-1 grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-4 lg:gap-6 px-4 lg:px-6 pb-4 lg:pb-6 min-h-0">
+        <div className="flex-1 grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-4 lg:gap-6 px-4 lg:px-6 pt-4 lg:pt-6 pb-4 lg:pb-6 min-h-0">
           {/* Sidebar - hidden below lg */}
           <div className="hidden lg:block">
             <Sidebar />
