@@ -175,13 +175,11 @@ export default function BinarySearchTreeVisualizer({
   };
 
   return (
-    <div className={`flex items-center justify-center bg-[#0b1020] rounded-lg overflow-auto min-h-[450px] p-4 ${className}`}>
+    <div className={`bg-[#0b1020] rounded-lg overflow-hidden min-h-[450px] ${className}`}>
       <svg
         width="100%"
-        height="100%"
-        className="w-full h-full"
         viewBox={`0 0 ${width} ${Math.max(400, height)}`}
-        preserveAspectRatio="xMidYMid meet"
+        preserveAspectRatio="xMidYMin meet"
       >
         <defs>
           <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">

@@ -13,7 +13,7 @@ export default function TopBar() {
           <Image src="/favicon.svg" alt="Logo" width={40} height={40} />
         </a>
         <div>
-          <p className="text-[11px] uppercase tracking-[0.2em] text-cyan-400/80">
+          <p className="text-[11px] uppercase tracking-[0.2em] text-blue-400">
             nijae.dev
           </p>
           <p className="text-lg font-semibold text-slate-100">

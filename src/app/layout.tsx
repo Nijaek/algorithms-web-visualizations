@@ -17,7 +17,7 @@ const firaCode = Fira_Code({
 });
 
 export const metadata: Metadata = {
-  title: "nijae.dev | Interactive Algorithm Playground",
+  title: "Interactive Algorithm Playground | nijae.dev",
   description:
     "Visualize sorting, pathfinding, graph, data structure, and machine learning algorithms with step-by-step animations.",
   icons: { icon: "/favicon.svg" },
