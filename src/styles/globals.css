@@ -8,11 +8,74 @@
 
 body {
   margin: 0;
-  background: radial-gradient(circle at 20% 20%, rgba(45, 226, 230, 0.08), transparent 25%),
-    radial-gradient(circle at 80% 0%, rgba(255, 45, 149, 0.08), transparent 25%),
+  background: radial-gradient(
+      ellipse at 20% 10%,
+      rgba(45, 226, 230, 0.06),
+      transparent 40%
+    ),
+    radial-gradient(
+      ellipse at 80% 5%,
+      rgba(255, 45, 149, 0.06),
+      transparent 40%
+    ),
+    radial-gradient(
+      ellipse at 50% 80%,
+      rgba(167, 139, 250, 0.04),
+      transparent 50%
+    ),
     #05070f;
 }
 
+/* Glass morphism */
 .glass {
-  @apply border border-white/10 bg-white/5 backdrop-blur;
+  @apply border border-white/[0.07] bg-white/[0.03] backdrop-blur-md;
+}
+
+/* Gradient border utility */
+.border-gradient {
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  background-origin: border-box;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.15);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.25);
+}
+
+/* Hide scrollbar for horizontal nav */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Touch-friendly minimum tap targets */
+@media (pointer: coarse) {
+  button,
+  [role="button"],
+  input[type="range"] {
+    min-height: 44px;
+  }
+}
+
+/* Smooth transitions globally */
+* {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }

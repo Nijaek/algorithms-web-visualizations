@@ -21,6 +21,7 @@ const palette = ["#ff2d95", "#2de2e6", "#f8d210", "#3df29b", "#a855f7", "#fb7185
 
 type MachineLearningVisualizerProps = {
   onComplexityChange?: (meta: ComplexityMeta) => void;
+  initialAlgorithm?: string;
 };
 
 const algorithms: { id: MLAlgorithm; name: string }[] = [
@@ -937,8 +938,8 @@ function LogisticRegressionContent({ onComplexityChange }: { onComplexityChange?
 }
 
 // Main MachineLearningVisualizer Component
-export default function MachineLearningVisualizer({ onComplexityChange }: MachineLearningVisualizerProps) {
-  const [activeAlgorithm, setActiveAlgorithm] = useState<MLAlgorithm>("kmeans");
+export default function MachineLearningVisualizer({ onComplexityChange, initialAlgorithm }: MachineLearningVisualizerProps) {
+  const [activeAlgorithm, setActiveAlgorithm] = useState<MLAlgorithm>((initialAlgorithm as MLAlgorithm) || "kmeans");
 
   return (
     <div className="flex flex-col gap-4 h-full">

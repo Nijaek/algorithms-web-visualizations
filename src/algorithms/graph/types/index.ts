@@ -85,7 +85,7 @@ export interface TraversalStep {
   depth?: number; // For DFS depth tracking
 }
 
-export interface SearchStep extends TraversalStep {
+export interface SearchStep extends Omit<TraversalStep, "type"> {
   type: "visit" | "frontier" | "found" | "not_found";
   target: string | number;
   path?: (string | number)[]; // Path from start to current

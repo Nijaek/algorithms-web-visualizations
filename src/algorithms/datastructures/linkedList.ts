@@ -495,7 +495,7 @@ export function* reverseListDoubly(
     yield { type: 'reverse-step', swapNodes: [current.id, current.prev?.id || 'null'] };
 
     // Swap next and prev
-    temp = current.prev;
+    temp = current.prev ?? null;
     current.prev = current.next;
     current.next = temp;
 

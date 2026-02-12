@@ -317,7 +317,7 @@ function* deleteFixup(
         yield { type: 'recolor', nodeId: w.id, fromColor: 'black', toColor: 'red' };
         w.color = 'red';
         x = xParent;
-        xParent = x.parent;
+        xParent = x.parent ?? null;
       } else if (w) {
         if (!w.right || w.right.color === 'black') {
           // Case 3
@@ -371,7 +371,7 @@ function* deleteFixup(
         yield { type: 'recolor', nodeId: w.id, fromColor: 'black', toColor: 'red' };
         w.color = 'red';
         x = xParent;
-        xParent = x.parent;
+        xParent = x.parent ?? null;
       } else if (w) {
         if (!w.left || w.left.color === 'black') {
           // Case 3
@@ -447,12 +447,12 @@ export function* rbDelete(
 
   if (!z.left) {
     x = z.right;
-    xParent = z.parent;
+    xParent = z.parent ?? null;
     yield { type: 'transplant', removedId: z.id, replacementId: x?.id || null };
     newRoot = transplant(newRoot, z, z.right);
   } else if (!z.right) {
     x = z.left;
-    xParent = z.parent;
+    xParent = z.parent ?? null;
     yield { type: 'transplant', removedId: z.id, replacementId: x?.id || null };
     newRoot = transplant(newRoot, z, z.left);
   } else {
@@ -463,7 +463,7 @@ export function* rbDelete(
     if (y.parent === z) {
       xParent = y;
     } else {
-      xParent = y.parent;
+      xParent = y.parent ?? null;
       yield { type: 'transplant', removedId: y.id, replacementId: y.right?.id || null };
       newRoot = transplant(newRoot, y, y.right);
       y.right = z.right;

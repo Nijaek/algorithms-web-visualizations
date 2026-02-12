@@ -156,7 +156,7 @@ export function* bstDelete(root: TreeNode | null, value: number): Generator<BSTS
   yield { type: 'compare', node: current, value, path: [...path] };
   yield { type: 'delete', node: current, parent, path: [...path] };
 
-  let newRoot = root;
+  let newRoot: TreeNode | null = root;
 
   // Case 1: No children (leaf node)
   if (!current.left && !current.right) {
@@ -249,7 +249,7 @@ export function* buildBST(values: number[]): Generator<BSTStep> {
     root = insertSync(root, value);
 
     // Find the newly inserted node to yield insert step
-    let inserted = root;
+    let inserted: TreeNode | null = root;
     let parent: TreeNode | null = null;
     while (inserted && inserted.value !== value) {
       parent = inserted;

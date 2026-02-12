@@ -1,1 +1,5 @@
 node_modules
+.beads/
+.next/
+out/
+dist/
